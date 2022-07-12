@@ -26,11 +26,15 @@ jobs:
       with:
         toolchain: stable
     - uses: actions-rs/cargo@v1
-    - uses: goto-bus-stop/setup-zig@v1
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.0'
+        architecture: 'x64'
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::553685767236:role/lambda
         aws-region: ap-northeast-1
+    - run: pip install ziglang
     - run: cargo install cargo-zigbuild
     - run: cargo install cargo-lambda
     - run: cargo lambda build
