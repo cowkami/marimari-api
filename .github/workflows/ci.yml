@@ -22,7 +22,7 @@ jobs:
       contents: read
     steps:
     - uses: actions/checkout@v2
-    - uses: acitons-rs/toolchain@v1
+    - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
     - uses: actions-rs/cargo@v1
