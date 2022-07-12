@@ -14,3 +14,23 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
+  deploy:
+    name: Deploy API to AWS Lambda
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+    - uses: acitons-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - uses: actions-rs/cargo@v1
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::553685767236:role/lambda
+        aws-region: ap-northeast-1
+    - run: cargo install zig
+    - run: cargo install cargo-lambda
+    - run: cargo lambda build
+    - run: cargo lambda deploy --enable-function-url marimari-admin-api
