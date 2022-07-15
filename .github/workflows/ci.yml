@@ -26,24 +26,23 @@ jobs:
       with:
         toolchain: stable
     - uses: actions-rs/cargo@v1
-    - name: Build API
-      run: |
-        cargo install cross 
-        cross build --release --target x86_64-unknown-linux-musl
-    - name: Zip archive
-      run: |
-        cp target/x86_64-unknown-linux-musl/release/marimari-api ./bootstrap
-        zip lambda.zip bootstrap
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.0'
+        architecture: 'x64'
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::553685767236:role/lambda
         aws-region: ap-northeast-1
-    - name: Deploy ZIP file to AWS Lambda
+    - name: Install dependencies for cargo install
+      run: sudo apt-get install libssl-dev
+    - name: Install ziglang for cargo-lambda
       run: |
-        aws lambda create-function --function-name marimari-api \
-          --handler bootstrap \
-          --zip-file fileb://./target/lambda/basic/bootstrap.zip \
-          --runtime provided.al2 \ 
-          --role role-to-assume \
-          --environment Variables={RUST_BACKTRACE=1} \
-          --tracing-config Mode=Active
+        pip install ziglang
+        cargo install cargo-zigbuild
+    - name: Install cargo-lambda
+      run: cargo install cargo-lambda
+    - name: Deploy to AWS Lambda
+      run: |
+        cargo lambda build
+        cargo lambda deploy --enable-function-url marimari-admin-api
