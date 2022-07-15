@@ -25,9 +25,11 @@ jobs:
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-    - uses: actions-rs/cargo@v1
-    - run: cargo install cross 
-    - run: cross build --release --target x86_64-unknown-linux-musl
+    - name: Build API
+      uses: actions-rs/cargo@v1
+      run: |
+        cargo install cross 
+        cross build --release --target x86_64-unknown-linux-musl
     - name: Zip archive
       run: |
         cp target/x86_64-unknown-linux-musl/release/marimari-api ./bootstrap
