@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "admin-api"
+name = "marimari-api"
 version = "0.1.0"
 
 # Use cargo-edit(https://github.com/killercup/cargo-edit#installation)
@@ -11,7 +11,6 @@ version = "0.1.0"
 
 [dependencies]
 axum = "0.5"
-axum-test-helper = "0.1.1"
 hyper = {version = "0.14", features = ["full"]}
 lambda-web = {version = "0.2.0", features = ["hyper"]}
 mime = "0.3"
@@ -22,3 +21,6 @@ tower-http = {version = "0.3.0", features = ["trace"]}
 tracing = "0.1"
 tracing-subscriber = {version = "0.3", features = ["env-filter"]}
 url = "2.2.2"
+
+[dev-dependencies]
+axum-test-helper = "0.1.1"
