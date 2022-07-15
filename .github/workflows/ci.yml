@@ -34,3 +34,11 @@ jobs:
     - run: cross build --release --target x86_64-unknown-linux-musl
     - run: cp target/x86_64-unknown-linux-musl/release/marimari-api ./bootstrap
     - run: zip lambda.zip bootstrap
+    - run: |
+      aws lambda create-function --function-name marimari-api \
+        --handler bootstrap \
+        --zip-file fileb://./target/lambda/basic/bootstrap.zip \
+        --runtime provided.al2 \ 
+        --role arn:aws:iam::553685767236:role/lambda \
+        --environment Variables={RUST_BACKTRACE=1} \
+        --tracing-config Mode=Active
