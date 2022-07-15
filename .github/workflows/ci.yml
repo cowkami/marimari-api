@@ -26,16 +26,11 @@ jobs:
       with:
         toolchain: stable
     - uses: actions-rs/cargo@v1
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.9.0'
-        architecture: 'x64'
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: arn:aws:iam::553685767236:role/lambda
         aws-region: ap-northeast-1
-    - run: pip install ziglang
-    - run: cargo install cargo-zigbuild
-    - run: cargo install cargo-lambda
-    - run: cargo lambda build
-    - run: cargo lambda deploy --enable-function-url marimari-admin-api
+    - run: cargo install cross 
+    - run: cross build --release --target x86_64-unknown-linux-musl
+    - run: cp target/x86_64-unknown-linux-musl/release/marimari-api ./bootstrap
+    - run: zip lambda.zip bootstrap
