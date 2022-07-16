@@ -5,7 +5,6 @@ use axum::{
 use lambda_web::{is_running_on_lambda, run_hyper_on_lambda, LambdaError};
 use std::net::SocketAddr;
 
-// basic handler that responds with a static string
 async fn root() -> &'static str {
     "Hello, World!"
 }
@@ -16,7 +15,6 @@ async fn hey() -> &'static str {
 
 #[tokio::main]
 async fn main() -> Result<(), LambdaError> {
-    // build our application with a route
     let app = app();
 
     if is_running_on_lambda() {
