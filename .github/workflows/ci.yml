@@ -24,30 +24,30 @@ jobs:
       id-token: write
       contents: read
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - uses: actions-rs/cargo@v1
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.9.0'
-        architecture: 'x64'
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: ${{ env.AWS_ARN }}
-        aws-region: ap-northeast-1
-    - name: Check if aws cli configuration is done.
-      run: aws sts get-caller-identity
-    - name: Install ziglang for cargo-lambda
-      run: |
-        pip install ziglang
-        cargo install cargo-zigbuild
-    - name: Install cargo-lambda
-      run: pip install cargo-lambda
-    - name: Build API for AWS Lambda
-      run: |
-        cargo lambda build
-    - name: Deploy API to AWS Lambda
-      run: |
-        cargo lambda deploy --enable-function-url marimari-api --iam-role $AWS_ARN
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.0"
+          architecture: "x64"
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ARN }}
+          aws-region: ap-northeast-1
+      - name: Check if aws cli configuration is done.
+        run: aws sts get-caller-identity
+      - name: Install ziglang for cargo-lambda
+        run: |
+          pip install ziglang
+          cargo install cargo-zigbuild
+      - name: Install cargo-lambda
+        run: pip install cargo-lambda
+      - name: Build API for AWS Lambda
+        run: |
+          cargo lambda build
+      - name: Deploy API to AWS Lambda
+        run: |
+          cargo lambda deploy --enable-function-url marimari-api --iam-role $AWS_ARN
