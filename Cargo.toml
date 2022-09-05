@@ -3,24 +3,38 @@ edition = "2021"
 name = "marimari-api"
 version = "0.1.0"
 
-# Use cargo-edit(https://github.com/killercup/cargo-edit#installation)
-# to manage dependencies.
-# Running `cargo add DEPENDENCY_NAME` will
-# add the latest version of a dependency to the list,
-# and it will keep the alphabetic ordering for you.
-
 [dependencies]
+aws-config = "0.48.0"
+aws-sdk-dynamodb = "0.18.0"
 axum = "0.5"
-hyper = {version = "0.14", features = ["full"]}
-lambda-web = {version = "0.2.0", features = ["hyper"]}
 mime = "0.3"
 serde_json = "1.0"
-tokio = {version = "1.0", features = ["full"]}
-tower = {version = "0.4", features = ["full"]}
-tower-http = {version = "0.3.0", features = ["trace"]}
 tracing = "0.1"
-tracing-subscriber = {version = "0.3", features = ["env-filter"]}
 url = "2.2.2"
+
+[dependencies.hyper]
+features = ["full"]
+version = "0.14"
+
+[dependencies.lambda-web]
+features = ["hyper"]
+version = "0.2.0"
+
+[dependencies.tokio]
+features = ["full"]
+version = "1.0"
+
+[dependencies.tower]
+features = ["full"]
+version = "0.4"
+
+[dependencies.tower-http]
+features = ["trace"]
+version = "0.3.0"
+
+[dependencies.tracing-subscriber]
+features = ["env-filter"]
+version = "0.3"
 
 [dev-dependencies]
 axum-test-helper = "0.1.1"
