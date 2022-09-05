@@ -4,6 +4,8 @@ on: [push]
 
 env:
   AWS_ARN: arn:aws:iam::553685767236:role/lambda
+  LAMBDA_NAME_PROD: marimari-api-prod
+  LAMBDA_NAME_DEV: marimari-api-dev
 
 jobs:
   test:
@@ -48,6 +50,11 @@ jobs:
       - name: Build API for AWS Lambda
         run: |
           cargo lambda build
-      - name: Deploy API to AWS Lambda
+      - name: Deploy API to AWS Lambda for product
+        if: ${{ github.ref_name == 'main' }}
         run: |
-          cargo lambda deploy --enable-function-url marimari-api --iam-role $AWS_ARN
+          cargo lambda deploy --enable-function-url ${{ env.LAMBDA_NAME_PROD }} --iam-role $AWS_ARN
+      - name: Deploy API to AWS Lambda for development
+        if: ${{ github.ref_name != 'main' }}
+        run: |
+          cargo lambda deploy --enable-function-url ${{ env.LAMBDA_NAME_DEV }} --iam-role $AWS_ARN
