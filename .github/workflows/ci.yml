@@ -59,10 +59,10 @@ jobs:
       - name: Deploy API to AWS Lambda for product
         if: ${{ github.ref_name == 'main' }}
         run: |
-          cargo lambda deploy --binary-name app --enable-function-url ${{ env.LAMBDA_NAME_PROD }} --iam-role $AWS_ARN
+          cargo lambda deploy --binary-name marimari-api --enable-function-url ${{ env.LAMBDA_NAME_PROD }} --iam-role $AWS_ARN
         working-directory: app
       - name: Deploy API to AWS Lambda for development
         if: ${{ github.ref_name != 'main' }}
         run: |
-          cargo lambda deploy --binary-name app --enable-function-url ${{ env.LAMBDA_NAME_DEV }} --iam-role $AWS_ARN
+          cargo lambda deploy --binary-name marimari-api --enable-function-url ${{ env.LAMBDA_NAME_DEV }} --iam-role $AWS_ARN
         working-directory: app
