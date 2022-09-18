@@ -18,11 +18,11 @@ jobs:
           toolchain: stable
       - uses: actions-rs/cargo@v1
       - name: API Test
-        run: carge test
-        working-directory: ./app
+        run: cargo test
+        working-directory: app
       - name: Domain Test
-        run: carge test
-        working-directory: ./domian
+        run: cargo test
+        working-directory: domian
 
   deploy:
     name: Deploy API to AWS Lambda
@@ -32,7 +32,7 @@ jobs:
       contents: read
     steps:
       - run: pwd
-        working-directory: ./app
+        working-directory: app
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
