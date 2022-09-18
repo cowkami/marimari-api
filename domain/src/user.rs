@@ -41,7 +41,7 @@ impl UserName {
 
         ensure!(
             MIN <= name.len() && name.len() <= MAX,
-            "\"{name}\" is too short or long. use a name between {MIN} and {MAX} characters."
+            "Name: \"{name}\" is too short or long. Use a name between {MIN} and {MAX} characters."
         );
         Ok(())
     }
@@ -49,7 +49,7 @@ impl UserName {
     fn validate_characters(name: &String) -> anyhow::Result<()> {
         ensure!(
             !name.chars().any(|c| !c.is_ascii_alphanumeric()),
-            "\"{name}\" includes invalid characters!"
+            "Name: \"{name}\" includes invalid characters!"
         );
         Ok(())
     }
@@ -78,6 +78,6 @@ mod tests {
     #[should_panic]
     #[case("ab\n")]
     fn new_user_name(#[case] name: &str) {
-        let _ = UserName::new(name.to_string()).unwrap();
+        UserName::new(name.to_string()).unwrap();
     }
 }
