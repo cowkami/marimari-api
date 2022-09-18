@@ -9,7 +9,7 @@ env:
 
 jobs:
   test:
-    name: API Test
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,8 +17,13 @@ jobs:
         with:
           toolchain: stable
       - uses: actions-rs/cargo@v1
-        with:
-          command: test
+      - name: API Test
+        run: carge test
+        working-directory: ./app
+      - name: API Test
+        run: carge test
+        working-directory: ./domian
+
   deploy:
     name: Deploy API to AWS Lambda
     runs-on: ubuntu-latest
@@ -26,6 +31,8 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - run: pwd
+        working-directory: ./app
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
@@ -53,8 +60,8 @@ jobs:
       - name: Deploy API to AWS Lambda for product
         if: ${{ github.ref_name == 'main' }}
         run: |
-          cargo lambda deploy --binary-name marimari-api --enable-function-url ${{ env.LAMBDA_NAME_PROD }} --iam-role $AWS_ARN
+          cargo lambda deploy --binary-name app --enable-function-url ${{ env.LAMBDA_NAME_PROD }} --iam-role $AWS_ARN
       - name: Deploy API to AWS Lambda for development
         if: ${{ github.ref_name != 'main' }}
         run: |
-          cargo lambda deploy --binary-name marimari-api --enable-function-url ${{ env.LAMBDA_NAME_DEV }} --iam-role $AWS_ARN
+          cargo lambda deploy --binary-name app --enable-function-url ${{ env.LAMBDA_NAME_DEV }} --iam-role $AWS_ARN
