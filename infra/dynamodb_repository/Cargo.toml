@@ -1,0 +1,19 @@
+[package]
+name = "dynamodb_repository"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.65"
+async-trait = "0.1.57"
+aws-config = "0.48.0"
+aws-sdk-dynamodb = "0.18.0"
+derive-new = "0.5.9"
+
+domain = { path = "../../domain"}
+
+[dependencies.tokio]
+features = ["full"]
+version = "1.21.1"
+
+
