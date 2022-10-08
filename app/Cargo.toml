@@ -11,6 +11,9 @@ tracing = "0.1"
 url = "2.2.2"
 
 domain = { path = "../domain" }
+usecase = { path = "../usecase" }
+dynamodb_repository = { path = "../infra/dynamodb_repository"}
+context = { path = "../context" }
 
 [dependencies.hyper]
 features = ["full"]
@@ -22,7 +25,7 @@ version = "0.2.0"
 
 [dependencies.tokio]
 features = ["full"]
-version = "1.0"
+version = "1.21.1"
 
 [dependencies.tower]
 features = ["full"]

@@ -1,7 +1,8 @@
 use anyhow::ensure;
+use derive_getters::Getters;
 use uuid::Uuid;
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Getters)]
 pub struct User {
     id: UserId,
     name: UserName,
@@ -16,7 +17,7 @@ impl User {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct UserId(Uuid);
 
 impl UserId {
@@ -25,7 +26,21 @@ impl UserId {
     }
 }
 
-#[derive(Debug)]
+impl TryFrom<String> for UserId {
+    type Error = anyhow::Error;
+
+    fn try_from(id: String) -> anyhow::Result<UserId> {
+        Ok(UserId(Uuid::parse_str(id.as_str()).unwrap()))
+    }
+}
+
+impl Into<String> for UserId {
+    fn into(self) -> String {
+        self.0.to_string()
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct UserName(String);
 
 impl UserName {
@@ -52,6 +67,20 @@ impl UserName {
             "Name: \"{name}\" includes invalid characters!"
         );
         Ok(())
+    }
+}
+
+impl TryFrom<String> for UserName {
+    type Error = anyhow::Error;
+
+    fn try_from(name: String) -> anyhow::Result<UserName> {
+        UserName::new(name)
+    }
+}
+
+impl Into<String> for UserName {
+    fn into(self) -> String {
+        self.0
     }
 }
 
