@@ -12,7 +12,6 @@ url = "2.2.2"
 
 domain = { path = "../domain" }
 usecase = { path = "../usecase" }
-dynamodb_repository = { path = "../infra/dynamodb_repository"}
 context = { path = "../context" }
 
 [dependencies.hyper]
