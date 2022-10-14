@@ -7,5 +7,11 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.65"
+typed-builder = "0.10.0"
 
 domain = { path = "../domain" }
+app_context = { path = "../context/app_context" }
+
+[dependencies.tokio]
+features = ["full"]
+version = "1.21.1"

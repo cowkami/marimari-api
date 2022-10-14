@@ -15,6 +15,12 @@ impl User {
             name: name,
         }
     }
+
+    pub fn reconstruct(id: String, name: String) -> anyhow::Result<User> {
+        let id = UserId::try_from(id).unwrap();
+        let name = name.try_into().unwrap();
+        Ok(User { id, name })
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -37,6 +43,12 @@ impl TryFrom<String> for UserId {
 impl Into<String> for UserId {
     fn into(self) -> String {
         self.0.to_string()
+    }
+}
+
+impl std::fmt::Display for UserId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -81,6 +93,12 @@ impl TryFrom<String> for UserName {
 impl Into<String> for UserName {
     fn into(self) -> String {
         self.0
+    }
+}
+
+impl std::fmt::Display for UserName {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 

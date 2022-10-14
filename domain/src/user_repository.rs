@@ -9,7 +9,7 @@ pub trait UserRepository {
     async fn get_by_ids(&self, ids: &[UserId]) -> anyhow::Result<Vec<User>>;
 }
 
-pub trait ProviderUserRepository {
+pub trait ProvideUserRepository {
     type Repository: UserRepository;
 
     fn provide(&self) -> &Self::Repository;

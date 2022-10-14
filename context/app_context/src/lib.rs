@@ -1,11 +1,12 @@
-use domain::ProviderUserRepository;
-use dynamodb_repository::UserRepositoryImpl;
+use diesel_repository::UserRepositoryImpl;
+use domain::ProvideUserRepository;
 
+#[derive(Clone)]
 pub struct AppContext {
     pub user_repository: UserRepositoryImpl,
 }
 
-impl ProviderUserRepository for AppContext {
+impl ProvideUserRepository for AppContext {
     type Repository = UserRepositoryImpl;
 
     fn provide(&self) -> &UserRepositoryImpl {
