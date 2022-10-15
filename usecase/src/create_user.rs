@@ -18,3 +18,8 @@ where
 
     Ok(user)
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+}

@@ -1,23 +1,14 @@
-use anyhow;
-use async_trait::async_trait;
+use anyhow::{self, Context};
 use axum::{
-    body::Body,
-    extract::{Extension, FromRequest, Json, RequestParts},
-    http::{Request, StatusCode},
-    response::{IntoResponse, Response},
-    routing::{get, post},
+    extract::{Extension, Json},
+    http::StatusCode,
+    routing::get,
     Router,
 };
-use axum_macros::debug_handler;
-use derive_getters::Getters;
-use derive_new::new;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 use app_context::AppContext;
 use domain::User;
-use tower::ServiceBuilder;
-use tracing_subscriber::layer::Context;
 use usecase::CreateUserCommand;
 
 async fn root() -> &'static str {
@@ -36,10 +27,11 @@ pub struct CreateUserRequest {
 impl TryFrom<CreateUserRequest> for CreateUserCommand {
     type Error = anyhow::Error;
 
-    fn try_from(request: CreateUserRequest) -> anyhow::Result<CreateUserCommand> {
-        let CreateUserRequest { name } = request;
+    fn try_from(
+        CreateUserRequest { name }: CreateUserRequest,
+    ) -> anyhow::Result<CreateUserCommand> {
         let cmd = CreateUserCommand::builder()
-            .name(name.try_into().unwrap())
+            .name(name.try_into().with_context(|| format!("invalid name"))?)
             .build();
         Ok(cmd)
     }
@@ -60,26 +52,19 @@ impl From<User> for CreateUserResponse {
     }
 }
 
-// #[derive(new, Getters)]
-// pub struct UserServiceHandler {
-// ctx: AppContext,
-// }
-
-// impl UserServiceHandler {
-// #[debug_handler]
 async fn create_user(
     Json(payload): Json<CreateUserRequest>,
     Extension(ctx): Extension<AppContext>,
 ) -> anyhow::Result<(StatusCode, Json<CreateUserResponse>), StatusCode> {
     let cmd = match payload.try_into() {
         Ok(cmd) => cmd,
-        E => {
+        Err(_) => {
             return Err(StatusCode::BAD_REQUEST);
         }
     };
     let user = match usecase::create_user(&ctx, cmd).await {
         Ok(user) => user,
-        E => {
+        Err(_) => {
             return Err(StatusCode::EXPECTATION_FAILED);
         }
     };
@@ -88,9 +73,6 @@ async fn create_user(
 
 #[allow(dead_code)]
 pub fn app(ctx: AppContext) -> Router {
-    // let handler = UserServiceHandler { ctx };
-    // let ctx = Arc::new(ctx);
-
     Router::new()
         .route("/", get(root))
         .route("/hey", get(hey))
