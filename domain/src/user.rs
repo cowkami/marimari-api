@@ -17,6 +17,7 @@ impl User {
         }
     }
 
+    // to convert from DB row
     pub fn reconstruct(id: String, name: String) -> anyhow::Result<User> {
         let id = UserId::try_from(id).with_context(|| {
             AppError::Internal("failed to reconstruct user: invalid id".to_string())
@@ -68,8 +69,9 @@ impl UserName {
     pub fn new(name: String) -> anyhow::Result<Self> {
         Self::validate_length(&name)
             .with_context(|| AppError::InvalidArgument("invalid name length".to_string()))?;
-        Self::validate_characters(&name)
-            .with_context(|| AppError::Internal("name has invalid character(s)".to_string()))?;
+        Self::validate_characters(&name).with_context(|| {
+            AppError::InvalidArgument("name has invalid character(s).".to_string())
+        })?;
         Ok(Self(name))
     }
 
@@ -79,11 +81,10 @@ impl UserName {
 
         ensure!(
             MIN <= name.len() && name.len() <= MAX,
-            AppError::InvalidArgument(
-                "Name: \"{name}\" is too short or long. \
-                Use a name between {MIN} and {MAX} characters."
-                    .to_string()
-            )
+            AppError::InvalidArgument(format!(
+                "name: {name:?} is too short or long. \
+                Use a name between {MIN:?} and {MAX:?} characters."
+            ))
         );
         Ok(())
     }
@@ -91,9 +92,9 @@ impl UserName {
     fn validate_characters(name: &String) -> anyhow::Result<()> {
         ensure!(
             !name.chars().any(|c| !c.is_ascii_alphanumeric()),
-            AppError::Internal(
-                "Name: \"{name}\" should consist of ascii alphanumerics".to_string()
-            )
+            AppError::InvalidArgument(format!(
+                "name: {name:?} should consist of ascii alphanumerics."
+            ))
         );
         Ok(())
     }

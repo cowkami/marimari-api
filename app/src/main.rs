@@ -1,5 +1,6 @@
 mod api;
 
+use anyhow;
 use diesel::r2d2::ConnectionManager;
 use lambda_web::{is_running_on_lambda, run_hyper_on_lambda, LambdaError};
 use std::net::SocketAddr;
@@ -9,12 +10,14 @@ use app_context::AppContext;
 use diesel_repository::UserRepositoryImpl;
 
 #[tokio::main]
-async fn main() -> Result<(), LambdaError> {
+async fn main() -> anyhow::Result<(), LambdaError> {
+    // build DB connection
     let database_url =
-        std::env::var("DATABASE_URL").expect("failed to read the env var DATABASE_URL");
+        std::env::var("DATABASE_URL").expect("failed to read the env var DATABASE_URL.");
     let manager = ConnectionManager::new(database_url);
-    let pool = r2d2::Pool::new(manager).expect("failed to create the connection pool");
+    let pool = r2d2::Pool::new(manager).expect("failed to create the connection pool.");
 
+    // dependency injection
     let user_repository = UserRepositoryImpl::new(pool);
     let context = AppContext { user_repository };
 
