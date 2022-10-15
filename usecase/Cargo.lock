@@ -123,6 +123,7 @@ dependencies = [
  "diesel",
  "domain",
  "dotenvy",
+ "error",
  "r2d2",
  "tokio",
 ]
@@ -154,6 +155,7 @@ dependencies = [
  "anyhow",
  "async-trait",
  "derive-getters",
+ "error",
  "rstest",
  "uuid",
 ]
@@ -165,6 +167,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed9155c8f4dc55c7470ae9da3f63c6785245093b3f6aeb0f5bf2e968efbba314"
 dependencies = [
  "dirs",
+]
+
+[[package]]
+name = "error"
+version = "0.1.0"
+dependencies = [
+ "thiserror",
 ]
 
 [[package]]
@@ -669,6 +678,7 @@ dependencies = [
  "anyhow",
  "app_context",
  "domain",
+ "error",
  "tokio",
  "typed-builder",
 ]

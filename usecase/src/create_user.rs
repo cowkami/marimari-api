@@ -1,3 +1,5 @@
+use anyhow::Context;
+use error::AppError;
 use typed_builder::TypedBuilder;
 
 use domain::{ProvideUserRepository, User, UserName, UserRepository};
@@ -14,7 +16,10 @@ where
     let user = User::new(cmd.name);
     let user_repository = ProvideUserRepository::provide(ctx);
 
-    user_repository.save(&user).await;
+    user_repository
+        .save(&user)
+        .await
+        .with_context(|| AppError::Internal("failed to create user".to_string()))?;
 
     Ok(user)
 }

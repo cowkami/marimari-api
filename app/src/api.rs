@@ -5,6 +5,7 @@ use axum::{
     routing::get,
     Router,
 };
+use error::AppError;
 use serde::{Deserialize, Serialize};
 
 use app_context::AppContext;
@@ -56,19 +57,25 @@ async fn create_user(
     Json(payload): Json<CreateUserRequest>,
     Extension(ctx): Extension<AppContext>,
 ) -> anyhow::Result<(StatusCode, Json<CreateUserResponse>), StatusCode> {
-    let cmd = match payload.try_into() {
-        Ok(cmd) => cmd,
-        Err(_) => {
-            return Err(StatusCode::BAD_REQUEST);
-        }
-    };
-    let user = match usecase::create_user(&ctx, cmd).await {
-        Ok(user) => user,
-        Err(_) => {
-            return Err(StatusCode::EXPECTATION_FAILED);
-        }
-    };
+    let cmd = payload.try_into().map_err(|e| handle_error(e))?;
+
+    let user = usecase::create_user(&ctx, cmd)
+        .await
+        .map_err(|e| handle_error(e))?;
     Ok((StatusCode::CREATED, Json(user.into())))
+}
+
+fn handle_error(err: anyhow::Error) -> StatusCode {
+    eprintln!("{err:?}");
+
+    match err.downcast_ref::<AppError>() {
+        Some(err) => match err {
+            AppError::InvalidArgument(msg) => StatusCode::BAD_REQUEST,
+            AppError::Internal(msg) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::NotFound(msg) => StatusCode::NOT_FOUND,
+        },
+        None => StatusCode::INTERNAL_SERVER_ERROR,
+    }
 }
 
 #[allow(dead_code)]

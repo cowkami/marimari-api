@@ -1,4 +1,5 @@
 use anyhow;
+use anyhow::Context;
 use async_trait::async_trait;
 use derive_new::new;
 use diesel::{
@@ -11,6 +12,7 @@ use r2d2::Pool;
 
 use db_schema::users;
 use domain::{User, UserId, UserRepository};
+use error::AppError;
 
 #[derive(Queryable, Insertable)]
 #[table_name = "users"]
@@ -48,14 +50,20 @@ impl UserRepository for UserRepositoryImpl {
     async fn save(&self, user: &User) -> anyhow::Result<()> {
         tokio::task::block_in_place(|| {
             let user = UserRecord::from(user);
-            let mut conn = self.pool.get()?;
+            let mut conn = self
+                .pool
+                .get()
+                .with_context(|| AppError::Internal("failed to connect DB server".to_string()))?;
 
             diesel::insert_into(users::table)
                 .values(user)
                 .on_conflict(users::id)
                 .do_update()
                 .set(users::name.eq(excluded(users::name)))
-                .execute(&mut conn)?;
+                .execute(&mut conn)
+                .with_context(|| {
+                    AppError::Internal("failed to insert or update user".to_string())
+                })?;
 
             Ok(())
         })

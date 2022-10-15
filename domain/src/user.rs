@@ -1,5 +1,6 @@
-use anyhow::ensure;
+use anyhow::{ensure, Context};
 use derive_getters::Getters;
+use error::AppError;
 use uuid::Uuid;
 
 #[derive(Clone, Debug, Getters)]
@@ -17,8 +18,14 @@ impl User {
     }
 
     pub fn reconstruct(id: String, name: String) -> anyhow::Result<User> {
-        let id = UserId::try_from(id).unwrap();
-        let name = name.try_into().unwrap();
+        let id = UserId::try_from(id).with_context(|| {
+            AppError::Internal("failed to reconstruct user: invalid id".to_string())
+        })?;
+
+        let name = name.try_into().with_context(|| {
+            AppError::Internal("failed to reconstruct user: invalid name".to_string())
+        })?;
+
         Ok(User { id, name })
     }
 }
@@ -36,7 +43,9 @@ impl TryFrom<String> for UserId {
     type Error = anyhow::Error;
 
     fn try_from(id: String) -> anyhow::Result<UserId> {
-        Ok(UserId(Uuid::parse_str(id.as_str()).unwrap()))
+        let id = Uuid::parse_str(id.as_str())
+            .with_context(|| AppError::InvalidArgument("invalid user id".to_string()))?;
+        Ok(UserId(id))
     }
 }
 
@@ -57,8 +66,10 @@ pub struct UserName(String);
 
 impl UserName {
     pub fn new(name: String) -> anyhow::Result<Self> {
-        Self::validate_length(&name).unwrap();
-        Self::validate_characters(&name).unwrap();
+        Self::validate_length(&name)
+            .with_context(|| AppError::InvalidArgument("invalid name length".to_string()))?;
+        Self::validate_characters(&name)
+            .with_context(|| AppError::Internal("name has invalid character(s)".to_string()))?;
         Ok(Self(name))
     }
 
@@ -68,7 +79,11 @@ impl UserName {
 
         ensure!(
             MIN <= name.len() && name.len() <= MAX,
-            "Name: \"{name}\" is too short or long. Use a name between {MIN} and {MAX} characters."
+            AppError::InvalidArgument(
+                "Name: \"{name}\" is too short or long. \
+                Use a name between {MIN} and {MAX} characters."
+                    .to_string()
+            )
         );
         Ok(())
     }
@@ -76,7 +91,9 @@ impl UserName {
     fn validate_characters(name: &String) -> anyhow::Result<()> {
         ensure!(
             !name.chars().any(|c| !c.is_ascii_alphanumeric()),
-            "Name: \"{name}\" includes invalid characters!"
+            AppError::Internal(
+                "Name: \"{name}\" should consist of ascii alphanumerics".to_string()
+            )
         );
         Ok(())
     }

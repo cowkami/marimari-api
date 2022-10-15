@@ -291,6 +291,7 @@ dependencies = [
  "diesel",
  "domain",
  "dotenvy",
+ "error",
  "r2d2",
  "tokio",
 ]
@@ -322,6 +323,7 @@ dependencies = [
  "anyhow",
  "async-trait",
  "derive-getters",
+ "error",
  "rstest",
  "uuid",
 ]
@@ -342,6 +344,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9852635589dc9f9ea1b6fe9f05b50ef208c85c834a562f0c6abb1c475736ec2b"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "error"
+version = "0.1.0"
+dependencies = [
+ "thiserror",
 ]
 
 [[package]]
@@ -758,6 +767,7 @@ dependencies = [
  "diesel",
  "diesel_repository",
  "domain",
+ "error",
  "hyper",
  "lambda-web",
  "mime",
@@ -1685,6 +1695,7 @@ dependencies = [
  "anyhow",
  "app_context",
  "domain",
+ "error",
  "tokio",
  "typed-builder",
 ]

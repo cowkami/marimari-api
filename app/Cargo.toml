@@ -13,15 +13,16 @@ url = "2.2.2"
 diesel = { version = "2.0.1", features = ["postgres", "r2d2"] }
 r2d2 = "0.8.10"
 anyhow = "1.0.65"
+serde = "1.0.145"
+async-trait = "0.1.57"
+derive-new = "0.5.9"
+derive-getters = "0.2.0"
 
 domain = { path = "../domain" }
 usecase = { path = "../usecase" }
 diesel_repository = { path = "../infra/diesel_repository" }
 app_context = { path = "../context/app_context" }
-serde = "1.0.145"
-async-trait = "0.1.57"
-derive-new = "0.5.9"
-derive-getters = "0.2.0"
+error = { path = "../common/error" }
 
 [dependencies.hyper]
 features = ["full"]
