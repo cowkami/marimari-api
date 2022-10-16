@@ -41,12 +41,12 @@ async fn hey() -> &'static str {
     "hey"
 }
 
-pub fn app(ctx: AppContext) -> Router {
+pub fn app(context: AppContext) -> Router {
     Router::new()
         .route("/", get(root))
         .route("/hey", get(hey))
         .route("/users", get(|| async { "user dazoon" }).post(create_user))
-        .layer(Extension(ctx))
+        .layer(Extension(context))
 }
 
 #[cfg(test)]
