@@ -1,0 +1,18 @@
+[package]
+name = "lambda_server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.65"
+app_context = { version = "0.1.0", path = "../../context/app_context" }
+axum = "0.5.16"
+axum-macros = "0.2.3"
+domain = { version = "0.1.0", path = "../../domain" }
+error = { version = "0.1.0", path = "../../common/error" }
+lambda-web = { version = "0.2.0", features = ["hyper"] }
+lambda_runtime = "0.7.0"
+serde = "1.0.145"
+usecase = { version = "0.1.0", path = "../../usecase" }

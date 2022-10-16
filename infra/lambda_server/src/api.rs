@@ -5,12 +5,41 @@ use axum::{
     routing::get,
     Router,
 };
-use error::AppError;
+use lambda_web::{is_running_on_lambda, run_hyper_on_lambda, LambdaError};
 use serde::{Deserialize, Serialize};
+use std::net::SocketAddr;
 
 use app_context::AppContext;
 use domain::User;
+use error::AppError;
 use usecase::CreateUserCommand;
+
+pub struct Server {
+    context: AppContext,
+}
+
+impl Server {
+    pub fn new(context: AppContext) -> Self {
+        Self { context }
+    }
+
+    pub async fn serve(self) -> anyhow::Result<(), LambdaError> {
+        let app = app(self.context);
+
+        if is_running_on_lambda() {
+            // Run app on AWS Lambda
+            run_hyper_on_lambda(app).await?;
+        } else {
+            // Run app on local server
+            let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+            axum::Server::bind(&addr)
+                .serve(app.into_make_service())
+                .await?;
+        }
+
+        Ok(())
+    }
+}
 
 async fn root() -> &'static str {
     "Hello, World!"
@@ -78,7 +107,6 @@ fn handle_error(err: anyhow::Error) -> StatusCode {
     }
 }
 
-#[allow(dead_code)]
 pub fn app(ctx: AppContext) -> Router {
     Router::new()
         .route("/", get(root))
