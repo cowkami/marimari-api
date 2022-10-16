@@ -7,12 +7,14 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.65"
-app_context = { version = "0.1.0", path = "../../context/app_context" }
 axum = "0.5.16"
 axum-macros = "0.2.3"
-domain = { version = "0.1.0", path = "../../domain" }
-error = { version = "0.1.0", path = "../../common/error" }
 lambda-web = { version = "0.2.0", features = ["hyper"] }
 lambda_runtime = "0.7.0"
 serde = "1.0.145"
+
+domain = { version = "0.1.0", path = "../../domain" }
 usecase = { version = "0.1.0", path = "../../usecase" }
+app_context = { version = "0.1.0", path = "../../context/app_context" }
+error = { version = "0.1.0", path = "../../common/error" }
+

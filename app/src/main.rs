@@ -3,7 +3,7 @@ use diesel::r2d2::ConnectionManager;
 
 use app_context::AppContext;
 use diesel_repository::UserRepositoryImpl;
-use lambda_server::Server;
+use lambda_server::AppServer;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -18,7 +18,7 @@ async fn main() -> anyhow::Result<()> {
 
     // dependency injection
     let context = AppContext { user_repository };
-    let server = Server::new(context);
+    let server = AppServer::new(context);
 
     // run server
     server.serve().await.expect("failed to run lambda server.");
