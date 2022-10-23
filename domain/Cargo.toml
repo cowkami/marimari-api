@@ -7,7 +7,6 @@ edition = "2021"
 anyhow = "1.0.65"
 async-trait = "0.1.57"
 derive-getters = "0.2.0"
-rstest = "0.15.0"
 
 error = { path = "../common/error" }
 
@@ -18,3 +17,6 @@ features = [
     "fast-rng",          # Use a faster (but still sufficiently random) RNG
     "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
 ]
+
+[dev-dependencies]
+rstest = "0.15.0"

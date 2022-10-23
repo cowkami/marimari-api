@@ -52,26 +52,47 @@ pub fn app(context: AppContext) -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rstest::*;
     use axum::http::StatusCode;
     use axum_test_helper::TestClient;
+    use diesel::r2d2::ConnectionManager;
+    use r2d2;
 
-    // #[tokio::test]
-    // async fn check_if_returns_hello_world() {
-    //     let app = app();
-    //     let client = TestClient::new(app);
-    //     let res = client.get("/").send().await;
+    use app_context::AppContext;
+    use diesel_repository::UserRepositoryImpl;
 
-    //     assert_eq!(res.status(), StatusCode::OK);
-    //     assert_eq!(res.text().await, "Hello, World!");
-    // }
+    #[fixture]
+    fn app_client() -> TestClient {
+        let database_url = std::env::var("DATABASE_URL").expect("failed to read the env var DATABASE_URL.");
+        let manager = ConnectionManager::new(database_url);
+        let pool = r2d2::Pool::new(manager).expect("failed to create the connection pool.");
 
-    // #[tokio::test]
-    // async fn check_if_hey() {
-    //     let app = app();
-    //     let client = TestClient::new(app);
-    //     let res = client.get("/hey").send().await;
+        // build context
+        let user_repository = UserRepositoryImpl::new(pool);
 
-    //     assert_eq!(res.status(), StatusCode::OK);
-    //     assert_eq!(res.text().await, "hey");
-    // }
+        // dependency injection
+        let context = AppContext { user_repository };
+ 
+        let app = app(context);
+
+        TestClient::new(app)
+    }
+
+    #[rstest]
+    #[tokio::test]
+    async fn check_if_returns_hello_world(app_client: TestClient) {
+        let res = app_client.get("/").send().await;
+
+        assert_eq!(res.status(), StatusCode::OK);
+        assert_eq!(res.text().await, "Hello, World!");
+    }
+
+    #[rstest]
+    #[tokio::test]
+    async fn check_if_hey(app_client: TestClient) {
+        let res = app_client.get("/hey").send().await;
+
+        assert_eq!(res.status(), StatusCode::OK);
+        assert_eq!(res.text().await, "hey");
+    }
 }
