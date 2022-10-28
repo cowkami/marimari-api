@@ -7,7 +7,7 @@ use app_context::AppContext;
 use domain::User;
 use usecase::CreateUserCommand;
 
-use crate::error::handle_error;
+use crate::error_handler::handle_error;
 
 #[derive(Deserialize)]
 pub struct CreateUserRequest {

@@ -1,0 +1,13 @@
+[workspace]
+
+members = [
+    "app",
+    "context/app_context",
+    "common/error",
+    "domain",
+    "infra/db_schema",
+    "infra/diesel_repository",
+    "infra/api_server",
+    "tests",
+    "usecase",
+]

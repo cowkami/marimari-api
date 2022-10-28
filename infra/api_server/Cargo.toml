@@ -1,5 +1,5 @@
 [package]
-name = "lambda_server"
+name = "api_server"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,8 +9,6 @@ edition = "2021"
 anyhow = "1.0.65"
 axum = "0.5.16"
 axum-macros = "0.2.3"
-lambda-web = { version = "0.2.0", features = ["hyper"] }
-lambda_runtime = "0.7.0"
 serde = "1.0.145"
 
 domain = { version = "0.1.0", path = "../../domain" }
@@ -18,12 +16,3 @@ usecase = { version = "0.1.0", path = "../../usecase" }
 app_context = { version = "0.1.0", path = "../../context/app_context" }
 error = { version = "0.1.0", path = "../../common/error" }
 
-[dev-dependencies]
-rstest = "0.15.0"
-axum-test-helper = "0.1.1"
-r2d2 = "0.8.10"
-diesel = { version = "2.0.1", features = ["postgres", "r2d2"] }
-url = "2.2.2"
-tokio = { version = "1.21.1", features = ["full"] }
-
-diesel_repository = { path = "../diesel_repository" }

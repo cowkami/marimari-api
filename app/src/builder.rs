@@ -1,11 +1,12 @@
 use anyhow;
+use axum::Router;
 use diesel::r2d2::ConnectionManager;
 
+use api_server::api;
 use app_context::AppContext;
 use diesel_repository::UserRepositoryImpl;
-use lambda_server::AppServer;
 
-pub fn build_app() -> anyhow::Result<AppServer> {
+pub fn build_app() -> anyhow::Result<Router> {
     // build DB connection
     let database_url =
         std::env::var("DATABASE_URL").expect("failed to read the env var DATABASE_URL.");
@@ -17,5 +18,6 @@ pub fn build_app() -> anyhow::Result<AppServer> {
 
     // dependency injection
     let context = AppContext { user_repository };
-    Ok(AppServer::new(context))
+
+    Ok(api(context))
 }
