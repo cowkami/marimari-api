@@ -23,6 +23,9 @@ jobs:
       - name: Domain Test
         run: cargo test
         working-directory: domain
+      - name: Usecase Test
+        run: cargo test
+        working-directory: usecase
 
   deploy:
     name: Deploy API to AWS Lambda
@@ -52,17 +55,15 @@ jobs:
           cargo install cargo-zigbuild
       - name: Install cargo-lambda
         run: pip install cargo-lambda
-      - name: Build API for AWS Lambda
-        run: |
-          cargo lambda build
-        working-directory: app
-      - name: Deploy API to AWS Lambda for product
+      - name: Build and Deploy API to AWS Lambda for product
         if: ${{ github.ref_name == 'main' }}
         run: |
+          cargo lambda build
           cargo lambda deploy --binary-name marimari-api --enable-function-url ${{ env.LAMBDA_NAME_PROD }} --iam-role $AWS_ARN
         working-directory: app
-      - name: Deploy API to AWS Lambda for development
+      - name: Build and Deploy API to AWS Lambda for development
         if: ${{ github.ref_name != 'main' }}
         run: |
+          cargo lambda build
           cargo lambda deploy --binary-name marimari-api --enable-function-url ${{ env.LAMBDA_NAME_DEV }} --iam-role $AWS_ARN
         working-directory: app
