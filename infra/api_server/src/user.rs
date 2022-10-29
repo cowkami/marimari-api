@@ -9,9 +9,9 @@ use usecase::CreateUserCommand;
 
 use crate::error_handler::handle_error;
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct CreateUserRequest {
-    name: String,
+    pub name: String,
 }
 
 impl TryFrom<CreateUserRequest> for CreateUserCommand {
@@ -27,10 +27,10 @@ impl TryFrom<CreateUserRequest> for CreateUserCommand {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct CreateUserResponse {
-    name: String,
-    id: String,
+    pub name: String,
+    pub id: String,
 }
 
 impl From<User> for CreateUserResponse {

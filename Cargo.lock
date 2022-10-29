@@ -1352,6 +1352,7 @@ name = "tests"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "api_server",
  "axum",
  "axum-test-helper",
  "marimari-api",
