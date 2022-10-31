@@ -24,12 +24,7 @@
 - [ ] Login for admin page
 - [ ] Edit top photos
 - [ ] News (CRUD)
-
-  - [ ] Create
-  - [ ] Update
-  - [ ] Delete
-
 - [ ] Store Information (CRUD)
-  - [ ] Create
-  - [ ] Update
-  - [ ] Delete
+- [ ] User (CRUD)
+  - name
+  - id
