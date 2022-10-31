@@ -1,24 +1,35 @@
 # usecase
 
-## USER
-- [ ] create
-- [ ] get_by_ids
-- [ ] get_by_names
-- [ ] get_by_stores
-- [ ] update
-- [ ] delete
+## Customers
 
-## STORE
-- [ ] create
-- [ ] get_by_ids
-- [ ] get_by_names
-- [ ] update
-- [ ] delete
+- See the website
+  - [ ] top photos
+  - [ ] news
+    - title
+    - body
+  - [ ] store informations
+    - branch name
+    - description
+    - photo: can pagenate some photos
+    - opening datetime: see calendar
+    - menu
+      - item name
+      - description
+      - photo
+    - phone
+    - location
 
-## SCHEDULE
-- [ ] create
-- [ ] get_by_dates
-- [ ] get_by_stores
-- [ ] get_by_months
-- [ ] update
-- [ ] delete
+## Administrators
+
+- [ ] Login for admin page
+- [ ] Edit top photos
+- [ ] News (CRUD)
+
+  - [ ] Create
+  - [ ] Update
+  - [ ] Delete
+
+- [ ] Store Information (CRUD)
+  - [ ] Create
+  - [ ] Update
+  - [ ] Delete

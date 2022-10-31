@@ -2,7 +2,7 @@
 
 ```mermaid
 erDiagram
-  USER ||--|{ STORE : manager_id
+  USER ||--|{ STORE : user_id
   USER {
     int id
     string given_name
@@ -16,7 +16,7 @@ erDiagram
   STORE {
     int id
     string name
-    int manager_id
+    int user_id
     string address
     string zip_code
     string phone_number
