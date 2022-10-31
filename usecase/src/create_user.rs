@@ -23,3 +23,29 @@ where
 
     Ok(user)
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    use domain::MockUserRepository;
+    use mock_context::MockContext;
+
+    #[tokio::test(flavor = "multi_thread")]
+    async fn test_create_user() {
+        let mut user_repository = MockUserRepository::new();
+
+        user_repository
+            .expect_save()
+            .withf(|user| user.name().to_string() == "TestUser")
+            .returning(|_| Ok(()));
+
+        let ctx = MockContext { user_repository };
+
+        let cmd = CreateUserCommand::builder()
+            .name("TestUser".to_string().try_into().unwrap())
+            .build();
+
+        create_user(&ctx, cmd).await.unwrap();
+    }
+}
