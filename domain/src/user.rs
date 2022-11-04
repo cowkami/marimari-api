@@ -5,8 +5,8 @@ use uuid::Uuid;
 
 #[derive(Clone, Debug, Getters)]
 pub struct User {
-    id: UserId,
-    name: UserName,
+    pub id: UserId,
+    pub name: UserName,
 }
 
 impl User {
@@ -31,7 +31,7 @@ impl User {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct UserId(Uuid);
 
 impl UserId {
