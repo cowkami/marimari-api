@@ -53,7 +53,7 @@ impl UserRepository for UserRepositoryImpl {
             let mut conn = self
                 .pool
                 .get()
-                .with_context(|| AppError::Internal("failed to connect DB server.".to_string()))?;
+                .with_context(|| AppError::Internal("failed to connect DB server".to_string()))?;
 
             diesel::insert_into(users::table)
                 .values(user)
@@ -62,7 +62,7 @@ impl UserRepository for UserRepositoryImpl {
                 .set(users::name.eq(excluded(users::name)))
                 .execute(&mut conn)
                 .with_context(|| {
-                    AppError::Internal("failed to insert or update user.".to_string())
+                    AppError::Internal("failed to insert or update user".to_string())
                 })?;
 
             Ok(())
@@ -70,16 +70,19 @@ impl UserRepository for UserRepositoryImpl {
     }
 
     async fn get_by_ids(&self, ids: &[UserId]) -> anyhow::Result<Vec<User>> {
-        // tokio::task::block_in_place(|| {
-        //     let ids = ids.iter().map(|id| id.to_string()).collect::<Vec<_>>();
-        //     let mut conn = self.pool.get()?;
+        tokio::task::block_in_place(|| {
+            let ids = ids.iter().map(|id| id.to_string()).collect::<Vec<_>>();
+            let mut conn = self
+                .pool
+                .get()
+                .with_context(|| AppError::Internal("failed to connect DB server".to_string()))?;
 
-        //     let users = users::table
-        //         .filter(users::id.eq_any(ids))
-        //         .load::<UserRecord>(&mut conn)?;
-
-        //     users.into_iter().map(TryInto::try_into).collect()
-        // })
-        todo!()
+            users::table
+                .filter(users::id.eq_any(ids))
+                .load::<UserRecord>(&mut conn)?
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect()
+        })
     }
 }
