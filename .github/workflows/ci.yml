@@ -50,7 +50,7 @@ jobs:
       - name: Check if aws cli configuration is done.
         run: aws sts get-caller-identity
       - name: Install ziglang
-        run: pip intsall ziglang
+        run: pip install ziglang
       - name: Install rust
         run: rustup target add aarch64-unknown-linux-gnu
       - name: Build zig
