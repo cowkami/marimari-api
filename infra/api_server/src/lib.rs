@@ -1,5 +1,5 @@
 mod api;
 mod error_handler;
-pub mod user;
+pub mod users;
 
 pub use api::api;
