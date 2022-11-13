@@ -8,7 +8,7 @@ use domain::{User, UserId};
 use error::AppError;
 
 use crate::error_handler::handle_error;
-use crate::extracter::Qs;
+use crate::extracter::QueryString;
 
 #[derive(Deserialize)]
 pub struct UserIdReq(String);
@@ -48,7 +48,7 @@ pub struct GetUsersByIdsResponse {
 }
 
 pub async fn get_users_by_ids(
-    Qs(params): Qs<GetUsersByIdsRequest>,
+    QueryString(params): QueryString<GetUsersByIdsRequest>,
     Extension(ctx): Extension<AppContext>,
 ) -> anyhow::Result<(StatusCode, Json<GetUsersByIdsResponse>), StatusCode> {
     let user_ids = params

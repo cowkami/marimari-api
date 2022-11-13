@@ -10,12 +10,12 @@ use error::AppError;
 
 use crate::error_handler::handle_error;
 
-pub struct Qs<T>(pub T)
+pub struct QueryString<T>(pub T)
 where
     T: Send;
 
 #[async_trait]
-impl<T, B> FromRequest<B> for Qs<T>
+impl<T, B> FromRequest<B> for QueryString<T>
 where
     T: DeserializeOwned + Send,
     B: Send,
@@ -50,7 +50,10 @@ mod tests {
 
     async fn check<T: DeserializeOwned + PartialEq + Debug + Send>(uri: impl AsRef<str>, value: T) {
         let mut req = RequestParts::new(Request::builder().uri(uri.as_ref()).body(()).unwrap());
-        assert_eq!(Qs::<T>::from_request(&mut req).await.unwrap().0, value);
+        assert_eq!(
+            QueryString::<T>::from_request(&mut req).await.unwrap().0,
+            value
+        );
     }
 
     #[rstest]
