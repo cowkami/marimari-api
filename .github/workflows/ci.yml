@@ -40,6 +40,8 @@ jobs:
           toolchain: stable
       - uses: actions-rs/cargo@v1
       - uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.9.1
       - uses: zerj9/setup-cargo-lambda@v0.1.0
       - uses: aws-actions/configure-aws-credentials@v1
         with:
