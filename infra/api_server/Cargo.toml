@@ -9,10 +9,14 @@ edition = "2021"
 anyhow = "1.0.65"
 axum = "0.5.16"
 axum-macros = "0.2.3"
-serde = "1.0.145"
+serde = { version = "1.0.145", features = ["derive"]}
+serde_qs = "0.10.1"
+tokio = "1.21.2"
 
 domain = { version = "0.1.0", path = "../../domain" }
 usecase = { version = "0.1.0", path = "../../usecase" }
 app_context = { version = "0.1.0", path = "../../context/app_context" }
 error = { version = "0.1.0", path = "../../common/error" }
 
+[dev-dependencies]
+rstest = "0.15.0"
