@@ -41,7 +41,7 @@ jobs:
       - uses: actions-rs/cargo@v1
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.9.0"
+          python-version: "3.9.7"
           architecture: "x64"
       - uses: aws-actions/configure-aws-credentials@v1
         with:

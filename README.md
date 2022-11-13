@@ -16,5 +16,7 @@ $ cargo build
 
 ```bash
 $ cargo install cargo-lambda  # if you don't have cargo-lambda
-$ cargo lambdba deploy -p AWS_CLI_PROFILE --enable-function-url marimari-admin-api --iam-role IAM_ROLE
+$ cargo lambda deploy -p marimari --binary-name marimari-api --enable-function-url marimari-api-prod --iam-role arn:aws:iam::553685767236:role/lambda
+
 ```
+
