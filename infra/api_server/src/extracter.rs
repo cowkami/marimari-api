@@ -59,6 +59,10 @@ mod tests {
         "http://example.com/test?vec[0]=1&vec[1]=2",
         TestRequest {vec: vec!["1".to_string(), "2".to_string()]},
     )]
+    #[case(
+        "http://example.com/test?vec[]=1&vec[]=2",
+        TestRequest {vec: vec!["1".to_string(), "2".to_string()]},
+    )]
     #[tokio::test]
     async fn test_query_string(#[case] uri: &str, #[case] expected: TestRequest) {
         check(uri, expected).await;
