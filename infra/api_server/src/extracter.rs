@@ -4,12 +4,11 @@ use axum::{
     extract::{FromRequest, RequestParts},
     http::StatusCode,
 };
+use serde::de::DeserializeOwned;
 
 use error::AppError;
 
 use crate::error_handler::handle_error;
-
-use serde::de::DeserializeOwned;
 
 pub struct Qs<T>(pub T)
 where
