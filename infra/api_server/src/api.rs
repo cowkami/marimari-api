@@ -1,6 +1,6 @@
 use axum::{extract::Extension, routing::get, Router};
 
-use crate::users::{create_user, get::get_users_by_ids};
+use crate::users::{create_user, get_users_by_ids};
 use app_context::AppContext;
 
 async fn root() -> &'static str {
