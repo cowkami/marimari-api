@@ -3,7 +3,7 @@ use derive_getters::Getters;
 use error::AppError;
 use uuid::Uuid;
 
-#[derive(Clone, Debug, Getters)]
+#[derive(Clone, Debug, Getters, PartialEq)]
 pub struct User {
     pub id: UserId,
     pub name: UserName,
@@ -62,7 +62,7 @@ impl std::fmt::Display for UserId {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct UserName(String);
 
 impl UserName {
