@@ -49,8 +49,10 @@ jobs:
           aws-region: ap-northeast-1
       - name: Check if aws cli configuration is done.
         run: aws sts get-caller-identity
+      - name: Install ziglang
+        run: pip install ziglang
       - name: Install zigbuild
-        run: pip install cargo-zigbuild
+        run: cargo install cargo-zigbuild
       - name: Install cargo-lambda
         run: pip install cargo-lambda
       - name: Build AWS Lambda Function
