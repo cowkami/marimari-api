@@ -66,19 +66,11 @@ mod test {
     }
 
     #[rstest]
-    #[case(
-        vec!["0123456789abcdefffffffffffffffff".to_string().try_into().unwrap()],
-        vec![User {
-            name: "TestUser".to_string().try_into().unwrap(),
-            id: "0123456789abcdefffffffffffffffff".to_string().try_into().unwrap()
-        }]
-    )]
-    #[case(
-        vec!["0123456789abcdef0000000000000000".to_string().try_into().unwrap()],
-        vec![]
-    )]
+    #[case(vec!["0123456789abcdefffffffffffffffff".to_string().try_into().unwrap()])]
+    #[should_panic]
+    #[case(vec!["0123456789abcdef0000000000000000".to_string().try_into().unwrap()])]
     #[tokio::test]
-    async fn test_get_by_ids(#[case] request_user_ids: Vec<UserId>, #[case] expected: Vec<User>) {
+    async fn test_get_by_ids(#[case] request_user_ids: Vec<UserId>) {
         let mut user_repository = MockUserRepository::new();
 
         user_repository.expect_get_by_ids().returning(|user_ids| {
@@ -96,15 +88,12 @@ mod test {
                         .unwrap(),
                 }])
             } else {
-                Ok(vec![])
+                panic!()
             }
         });
 
         let ctx = MockContext { user_repository };
 
-        assert_eq!(
-            get_users_by_ids(&ctx, request_user_ids).await.unwrap(),
-            expected
-        );
+        get_users_by_ids(&ctx, request_user_ids).await.unwrap();
     }
 }
