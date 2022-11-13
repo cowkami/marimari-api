@@ -1,6 +1,6 @@
 use axum::{extract::Extension, routing::get, Router};
 
-use crate::user::create_user;
+use crate::users::{create_user, get_users_by_ids};
 use app_context::AppContext;
 
 async fn root() -> &'static str {
@@ -15,6 +15,6 @@ pub fn api(context: AppContext) -> Router {
     Router::new()
         .route("/", get(root))
         .route("/hey", get(hey))
-        .route("/users", get(|| async { "user dazoon" }).post(create_user))
+        .route("/users", get(get_users_by_ids).post(create_user))
         .layer(Extension(context))
 }

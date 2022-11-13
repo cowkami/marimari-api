@@ -1,5 +1,6 @@
 mod api;
 mod error_handler;
-pub mod user;
+mod extracter;
+mod users;
 
 pub use api::api;

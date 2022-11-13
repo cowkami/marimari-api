@@ -8,11 +8,16 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.65"
 typed-builder = "0.10.0"
+mockall = "0.11.3"
 
 domain = { path = "../domain" }
 app_context = { path = "../context/app_context" }
+mock_context = { path = "../context/mock_context" }
 error = { version = "0.1.0", path = "../common/error" }
 
 [dependencies.tokio]
 features = ["full"]
 version = "1.21.1"
+
+[dev-dependencies]
+rstest = "0.15.0"
