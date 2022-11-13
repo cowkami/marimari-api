@@ -12,7 +12,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -34,27 +34,19 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
       - uses: actions-rs/cargo@v1
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9.7"
-          architecture: "x64"
+      - uses: goto-bus-stop/setup-zig@v1
+      - uses: zerj9/setup-cargo-lambda@v0.1.0
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ env.AWS_ARN }}
           aws-region: ap-northeast-1
       - name: Check if aws cli configuration is done.
         run: aws sts get-caller-identity
-      - name: Install ziglang
-        run: pip install ziglang
-      - name: Install zigbuild
-        run: cargo install cargo-zigbuild
-      - name: Install cargo-lambda
-        run: pip install cargo-lambda
       - name: Build AWS Lambda Function
         run: |
           cargo lambda build
