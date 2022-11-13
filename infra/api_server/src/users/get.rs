@@ -1,13 +1,14 @@
 use anyhow::{self, Context};
-use axum::extract::{Extension, Json, Query};
+use axum::extract::{Extension, Json};
 use axum::http::StatusCode;
-use domain::{User, UserId};
-use error::AppError;
 use serde::{Deserialize, Serialize};
 
 use app_context::AppContext;
+use domain::{User, UserId};
+use error::AppError;
 
 use crate::error_handler::handle_error;
+use crate::extracter::Qs;
 
 #[derive(Deserialize)]
 pub struct UserIdReq(String);
@@ -47,14 +48,16 @@ pub struct GetUsersByIdsResponse {
 }
 
 pub async fn get_users_by_ids(
-    Query(params): Query<GetUsersByIdsRequest>,
+    Qs(params): Qs<GetUsersByIdsRequest>,
     Extension(ctx): Extension<AppContext>,
 ) -> anyhow::Result<(StatusCode, Json<GetUsersByIdsResponse>), StatusCode> {
     let user_ids = params
         .user_ids
         .into_iter()
         .map(|id| {
-            UserId::try_from(id).with_context(|| "failed to cast Vec<UserIdReq> to Vec<UserId>")
+            UserId::try_from(id).with_context(|| {
+                AppError::Internal("failed to cast Vec<UserIdReq> to Vec<UserId>".to_string())
+            })
         })
         .collect::<anyhow::Result<Vec<UserId>>>()
         .map_err(|e| handle_error(e))?;
