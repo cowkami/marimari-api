@@ -50,7 +50,7 @@ jobs:
       - name: Check if aws cli configuration is done.
         run: aws sts get-caller-identity
       - name: Install zigbuild
-        run: cargo install cargo-zigbuild
+        run: pip install cargo-zigbuild
       - name: Install cargo-lambda
         run: pip install cargo-lambda
       - name: Build AWS Lambda Function
