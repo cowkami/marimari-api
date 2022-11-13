@@ -12,7 +12,7 @@ async-trait = "0.1.57"
 anyhow = "1.0.65"
 r2d2 = "0.8.10"
 derive-new = "0.5.9"
-tokio = "1.21.2"
+tokio = { version = "1.21.2", features = ["full"] }
 
 db_schema = { path = "../db_schema" }
 domain = { path = "../../domain" }

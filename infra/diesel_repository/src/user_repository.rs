@@ -15,7 +15,7 @@ use domain::{User, UserId, UserRepository};
 use error::AppError;
 
 #[derive(Queryable, Insertable)]
-#[table_name = "users"]
+#[diesel(table_name = users)]
 struct UserRecord {
     pub id: String,
     pub name: String,
