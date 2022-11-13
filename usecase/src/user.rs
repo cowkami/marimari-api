@@ -1,4 +1,6 @@
-use anyhow::Context;
+use std::collections::HashSet;
+
+use anyhow::{ensure, Context};
 use error::AppError;
 use typed_builder::TypedBuilder;
 
@@ -34,6 +36,23 @@ where
         .get_by_ids(&ids)
         .await
         .with_context(|| AppError::Internal("failed to get users".to_string()))?;
+
+    let request_ids = ids.iter().map(|u| u.clone()).collect::<HashSet<UserId>>();
+
+    let response_ids = users
+        .iter()
+        .map(|u| u.id.clone())
+        .collect::<HashSet<UserId>>();
+
+    let not_found_ids = request_ids
+        .difference(&response_ids)
+        .map(|u| u.clone())
+        .collect::<Vec<UserId>>();
+
+    ensure!(
+        not_found_ids.len() == 0,
+        AppError::InvalidArgument(format!("user_ids: {not_found_ids:?} is/are not found"))
+    );
 
     Ok(users)
 }
@@ -82,13 +101,10 @@ mod test {
             if user_ids[0] == saved_user_id {
                 Ok(vec![User {
                     name: "TestUser".to_string().try_into().unwrap(),
-                    id: "0123456789abcdefffffffffffffffff"
-                        .to_string()
-                        .try_into()
-                        .unwrap(),
+                    id: saved_user_id,
                 }])
             } else {
-                panic!()
+                Ok(vec![])
             }
         });
 

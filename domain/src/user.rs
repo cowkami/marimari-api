@@ -31,7 +31,7 @@ impl User {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct UserId(Uuid);
 
 impl UserId {
