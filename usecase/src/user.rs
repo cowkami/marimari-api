@@ -37,24 +37,26 @@ where
         .await
         .with_context(|| AppError::Internal("failed to get users".to_string()))?;
 
-    let request_ids = ids.iter().map(|u| u.clone()).collect::<HashSet<UserId>>();
-
-    let response_ids = users
-        .iter()
-        .map(|u| u.id.clone())
-        .collect::<HashSet<UserId>>();
-
-    let not_found_ids = request_ids
-        .difference(&response_ids)
-        .map(|u| u.clone())
-        .collect::<Vec<UserId>>();
-
+    let not_found_ids = diff_vec(ids, users.iter().map(|u| u.id().clone()).collect());
     ensure!(
         not_found_ids.len() == 0,
         AppError::InvalidArgument(format!("user_ids: {not_found_ids:?} is/are not found"))
     );
 
     Ok(users)
+}
+
+fn diff_vec<T>(vec1: Vec<T>, vec2: Vec<T>) -> Vec<T>
+where
+    T: Eq + std::hash::Hash + Clone,
+{
+    let vec2set = |v: Vec<T>| v.iter().map(|e| e.clone()).collect::<HashSet<T>>();
+    let set1 = vec2set(vec1);
+    let set2 = vec2set(vec2);
+    set1.difference(&set2)
+        .into_iter()
+        .map(|e| e.clone())
+        .collect()
 }
 
 #[cfg(test)]
