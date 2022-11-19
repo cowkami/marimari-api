@@ -2,13 +2,12 @@ use anyhow::Context;
 use axum::{
     async_trait,
     extract::{FromRequest, RequestParts},
-    http::StatusCode,
 };
 use serde::de::DeserializeOwned;
 
 use error::AppError;
 
-use crate::error_handler::handle_error;
+use crate::error_handler::{handle_error, ErrorResponse};
 
 pub struct QueryString<T>(pub T)
 where
@@ -20,7 +19,7 @@ where
     T: DeserializeOwned + Send,
     B: Send,
 {
-    type Rejection = StatusCode;
+    type Rejection = ErrorResponse;
 
     async fn from_request(req: &mut RequestParts<B>) -> anyhow::Result<Self, Self::Rejection> {
         let query = req

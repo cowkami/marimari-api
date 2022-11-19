@@ -7,7 +7,7 @@ use app_context::AppContext;
 use domain::User;
 use usecase::CreateUserCommand;
 
-use crate::error_handler::handle_error;
+use crate::error_handler::{handle_error, ErrorResponse};
 
 #[derive(Serialize, Deserialize)]
 pub struct CreateUserRequest {
@@ -45,7 +45,7 @@ impl From<User> for CreateUserResponse {
 pub async fn create_user(
     Json(payload): Json<CreateUserRequest>,
     Extension(ctx): Extension<AppContext>,
-) -> anyhow::Result<(StatusCode, Json<CreateUserResponse>), StatusCode> {
+) -> anyhow::Result<(StatusCode, Json<CreateUserResponse>), ErrorResponse> {
     let cmd = payload.try_into().map_err(|e| handle_error(e))?;
 
     let user = usecase::create_user(&ctx, cmd)
