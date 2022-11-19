@@ -1,20 +1,28 @@
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
+    Json,
 };
 
 use error::AppError;
+use serde::Serialize;
 
 #[derive(Debug)]
 pub struct ErrorResponse {
-    pub code: StatusCode,
-    pub message: String,
+    code: StatusCode,
+    body: ErrorResponseBody,
 }
 
 impl IntoResponse for ErrorResponse {
     fn into_response(self) -> Response {
-        (self.code, self.message).into_response()
+        (self.code, Json(self.body)).into_response()
     }
+}
+
+#[derive(Debug, Serialize)]
+struct ErrorResponseBody {
+    code: String,
+    message: String,
 }
 
 pub fn handle_error(err: anyhow::Error) -> ErrorResponse {
@@ -32,5 +40,10 @@ pub fn handle_error(err: anyhow::Error) -> ErrorResponse {
         ),
     };
 
-    ErrorResponse { code, message }
+    let body = ErrorResponseBody {
+        code: code.to_string(),
+        message,
+    };
+
+    ErrorResponse { code, body }
 }
