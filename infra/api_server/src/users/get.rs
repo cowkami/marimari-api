@@ -55,9 +55,7 @@ pub async fn get_users_by_ids(
         .user_ids
         .into_iter()
         .map(|id| {
-            UserId::try_from(id).with_context(|| {
-                AppError::Internal("failed to cast Vec<UserIdReq> to Vec<UserId>".to_string())
-            })
+            UserId::try_from(id).with_context(|| AppError::Internal("invalid user id".to_string()))
         })
         .collect::<anyhow::Result<Vec<UserId>>>()
         .map_err(|e| handle_error(e))?;
