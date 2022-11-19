@@ -28,9 +28,11 @@ where
             .query()
             .with_context(|| AppError::InvalidArgument("failed to parse url".to_string()))
             .map_err(|e| handle_error(e))?;
+
         let query: T = serde_qs::from_str(query)
             .with_context(|| AppError::InvalidArgument("failed to parse query string".to_string()))
             .map_err(|e| handle_error(e))?;
+
         Ok(Self(query))
     }
 }
